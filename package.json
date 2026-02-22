@@ -15,7 +15,7 @@
     "@ai-sdk/openai": "^3.0.12",
     "@ai-sdk/vue": "^3.0.39",
     "@modelcontextprotocol/sdk": "^1.25.2",
-    "@nuxtjs/tailwindcss": "^6.14.0",
+    "@nuxtjs/supabase": "^2.0.3",
     "ai": "^6.0.39",
     "marked": "^17.0.1",
     "nuxt": "^4.2.2",
@@ -23,5 +23,9 @@
     "vue": "^3.5.26",
     "vue-router": "^4.6.4",
     "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "lucide-vue-next": "^0.562.0"
   }
 }
