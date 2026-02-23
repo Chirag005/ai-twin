@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   })
 
   const result = await streamText({
-    model: groq('meta-llama/llama-4-scout-17b-16e-instruct'), // Vision-capable model
+    model: groq('llama-3.3-70b-versatile'), // Stable, high-limit free-tier model
     system: `You are Chirag's professional AI assistant.
 You represent Chirag accurately, enthusiastically, and always professionally.
 Only use information returned by the provided tools.
