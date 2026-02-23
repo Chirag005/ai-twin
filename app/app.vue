@@ -1,5 +1,10 @@
+<script setup>
+import { Analytics } from '@vercel/analytics/nuxt';
+</script>
+
 <template>
   <NuxtPage />
+  <Analytics />
 </template>
 
 <style>

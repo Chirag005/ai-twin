@@ -16,6 +16,7 @@
     "@ai-sdk/vue": "^3.0.39",
     "@modelcontextprotocol/sdk": "^1.25.2",
     "@nuxtjs/supabase": "^2.0.3",
+    "@vercel/analytics": "^1.6.1",
     "ai": "^6.0.39",
     "marked": "^17.0.1",
     "nuxt": "^4.2.2",
