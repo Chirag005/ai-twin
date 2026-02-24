@@ -1,4 +1,4 @@
-import { groq } from '@ai-sdk/groq'
+import { createGroq } from '@ai-sdk/groq'
 import { streamText, tool } from 'ai'
 import { defineEventHandler, readBody } from 'h3'
 import { readFileSync } from 'node:fs'
@@ -55,7 +55,7 @@ export default defineEventHandler(async (event) => {
   })
 
   const result = await streamText({
-    model: groq('llama-3.3-70b-versatile'), // Stable, high-limit free-tier model
+    model: createGroq({ apiKey: process.env.GROQ_API_KEY })('llama-3.3-70b-versatile'),
     system: `You are Chirag's professional AI assistant.
 You represent Chirag accurately, enthusiastically, and always professionally.
 Only use information returned by the provided tools.
