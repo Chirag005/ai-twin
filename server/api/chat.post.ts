@@ -13,8 +13,8 @@ export default defineEventHandler(async (event) => {
 
   // ── Log user question to Supabase (service role — awaited before stream) ──
   try {
-    const supabaseUrl     = process.env.NUXT_PUBLIC_SUPABASE_URL
-    const supabaseService = process.env.SUPABASE_SERVICE_KEY
+    const supabaseUrl     = config.public.supabaseUrl
+    const supabaseService = config.supabaseServiceKey as string
 
     if (supabaseUrl && supabaseService) {
       const adminClient = createClient(supabaseUrl, supabaseService, {

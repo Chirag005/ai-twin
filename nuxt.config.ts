@@ -11,7 +11,8 @@ export default defineNuxtConfig({
   //   runtimeConfig.public.supabaseKey → NUXT_PUBLIC_SUPABASE_KEY
   // Note: @ai-sdk/groq also reads process.env.GROQ_API_KEY directly.
   runtimeConfig: {
-    groqApiKey: process.env.GROQ_API_KEY || '', // server-only secret
+    groqApiKey:         process.env.GROQ_API_KEY          || '', // override: NUXT_GROQ_API_KEY
+    supabaseServiceKey: process.env.SUPABASE_SERVICE_KEY  || '', // override: NUXT_SUPABASE_SERVICE_KEY
     public: {
       supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL || '',
       supabaseKey: process.env.NUXT_PUBLIC_SUPABASE_KEY || '',
