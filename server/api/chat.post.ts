@@ -10,6 +10,13 @@ import { serverSupabaseUser } from '#supabase/server'
 export default defineEventHandler(async (event) => {
   const { messages } = await readBody(event)
 
+  // Temporary debug — remove after confirming env vars
+  console.log('[debug] env vars:', {
+    GROQ_API_KEY:          !!process.env.GROQ_API_KEY,
+    NUXT_PUBLIC_SUPABASE_URL: !!process.env.NUXT_PUBLIC_SUPABASE_URL,
+    SUPABASE_SERVICE_KEY:  !!process.env.SUPABASE_SERVICE_KEY,
+  })
+
   // ── Log user question to Supabase (service role — bypasses RLS/auth) ─────
   // Fire-and-forget: never blocks or delays the streaming response.
   try {
