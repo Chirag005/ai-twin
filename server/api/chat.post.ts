@@ -11,14 +11,6 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const { messages } = await readBody(event)
 
-  // Temporary debug — remove after confirming env vars
-  console.log('[debug] env vars:', {
-    groqApiKey_runtimeConfig: !!config.groqApiKey,
-    groqApiKey_processEnv:    !!process.env.GROQ_API_KEY,
-    NUXT_GROQ_API_KEY:        !!process.env.NUXT_GROQ_API_KEY,
-    SUPABASE_SERVICE_KEY:     !!process.env.SUPABASE_SERVICE_KEY,
-  })
-
   // ── Log user question to Supabase (service role — bypasses RLS/auth) ─────
   // Fire-and-forget: never blocks or delays the streaming response.
   try {
