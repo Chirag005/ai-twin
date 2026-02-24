@@ -4,32 +4,33 @@ import { defineEventHandler, readBody } from 'h3'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { z } from 'zod'
-import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
+import { serverSupabaseServiceRole, serverSupabaseUser } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
   const { messages } = await readBody(event)
 
-  // ── Log user question to Supabase ────────────────────────────────────────
-  // Fire-and-forget: never blocks or fails the streaming response.
+  // ── Log user question to Supabase (service role — bypasses RLS/auth) ─────
+  // Fire-and-forget: never blocks or delays the streaming response.
   try {
-    const [supabase, user] = await Promise.all([
-      serverSupabaseClient(event),
-      serverSupabaseUser(event),
+    const [adminClient, user] = await Promise.all([
+      serverSupabaseServiceRole(event),
+      serverSupabaseUser(event).catch(() => null),
     ])
 
     const lastUserMsg = [...messages].reverse().find((m: any) => m.role === 'user')
 
-    if (user && lastUserMsg) {
+    if (lastUserMsg) {
       const question = typeof lastUserMsg.content === 'string'
         ? lastUserMsg.content
         : '[multipart message with attachments]'
 
-      ;(supabase as any).from('chat_logs').insert({
-        user_id:    user.id,
-        user_email: user.email,
+      ;(adminClient as any).from('chat_logs').insert({
+        user_id:    user?.id    ?? null,
+        user_email: user?.email ?? 'anonymous',
         question,
       }).then(({ error }: { error: any }) => {
         if (error) console.error('[chat_logs] insert failed:', error.message)
+        else console.log('[chat_logs] logged question from', user?.email ?? 'anonymous')
       })
     }
   } catch (err) {
