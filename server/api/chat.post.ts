@@ -4,15 +4,43 @@ import { defineEventHandler, readBody } from 'h3'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { z } from 'zod'
+import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
   const { messages } = await readBody(event)
+
+  // ── Log user question to Supabase ────────────────────────────────────────
+  // Fire-and-forget: never blocks or fails the streaming response.
+  try {
+    const [supabase, user] = await Promise.all([
+      serverSupabaseClient(event),
+      serverSupabaseUser(event),
+    ])
+
+    const lastUserMsg = [...messages].reverse().find((m: any) => m.role === 'user')
+
+    if (user && lastUserMsg) {
+      const question = typeof lastUserMsg.content === 'string'
+        ? lastUserMsg.content
+        : '[multipart message with attachments]'
+
+      ;(supabase as any).from('chat_logs').insert({
+        user_id:    user.id,
+        user_email: user.email,
+        question,
+      }).then(({ error }: { error: any }) => {
+        if (error) console.error('[chat_logs] insert failed:', error.message)
+      })
+    }
+  } catch (err) {
+    // Never let logging crash the chat
+    console.error('[chat_logs] unexpected error:', err)
+  }
 
   // Normalise messages — each message content may be a string or an array of
   // content parts (text / image) sent from the multimodal frontend.
   const normalisedMessages = messages.map((m: any) => {
     if (typeof m.content === 'string') return m
-    // Already an array of parts — pass through directly (AI SDK handles it)
     return m
   })
 
@@ -56,3 +84,4 @@ When the user attaches a PDF document (provided as extracted text), read and sum
 
   return result.toTextStreamResponse()
 })
+
