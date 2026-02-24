@@ -11,8 +11,7 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const { messages } = await readBody(event)
 
-  // ── Log user question to Supabase (service role — bypasses RLS/auth) ─────
-  // Fire-and-forget: never blocks or delays the streaming response.
+  // ── Log user question to Supabase (service role — awaited before stream) ──
   try {
     const supabaseUrl     = process.env.NUXT_PUBLIC_SUPABASE_URL
     const supabaseService = process.env.SUPABASE_SERVICE_KEY
@@ -30,22 +29,24 @@ export default defineEventHandler(async (event) => {
           ? lastUserMsg.content
           : '[multipart message with attachments]'
 
-        adminClient.from('chat_logs').insert({
+        // Await with 5s timeout so it never stalls the chat response
+        const insertPromise = adminClient.from('chat_logs').insert({
           user_id:    user?.id    ?? null,
           user_email: user?.email ?? 'anonymous',
           question,
-        }).then(({ error }: { error: any }) => {
-          if (error) console.error('[chat_logs] insert failed:', error.message)
-          else console.log('[chat_logs] logged question from', user?.email ?? 'anonymous')
         })
+        const timeout = new Promise(r => setTimeout(r, 5000))
+        const { error } = await Promise.race([insertPromise, timeout]) as any
+        if (error) console.error('[chat_logs] insert failed:', error.message)
+        else console.log('[chat_logs] logged from', user?.email ?? 'anonymous')
       }
     } else {
       console.warn('[chat_logs] skipping — SUPABASE_SERVICE_KEY not set')
     }
   } catch (err) {
-    // Never let logging crash the chat
     console.error('[chat_logs] unexpected error:', err)
   }
+
 
 
   // Normalise messages — each message content may be a string or an array of
