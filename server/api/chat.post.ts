@@ -8,13 +8,15 @@ import { createClient } from '@supabase/supabase-js'
 import { serverSupabaseUser } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig()
   const { messages } = await readBody(event)
 
   // Temporary debug — remove after confirming env vars
   console.log('[debug] env vars:', {
-    GROQ_API_KEY:          !!process.env.GROQ_API_KEY,
-    NUXT_PUBLIC_SUPABASE_URL: !!process.env.NUXT_PUBLIC_SUPABASE_URL,
-    SUPABASE_SERVICE_KEY:  !!process.env.SUPABASE_SERVICE_KEY,
+    groqApiKey_runtimeConfig: !!config.groqApiKey,
+    groqApiKey_processEnv:    !!process.env.GROQ_API_KEY,
+    NUXT_GROQ_API_KEY:        !!process.env.NUXT_GROQ_API_KEY,
+    SUPABASE_SERVICE_KEY:     !!process.env.SUPABASE_SERVICE_KEY,
   })
 
   // ── Log user question to Supabase (service role — bypasses RLS/auth) ─────
@@ -62,7 +64,7 @@ export default defineEventHandler(async (event) => {
   })
 
   const result = await streamText({
-    model: createGroq({ apiKey: process.env.GROQ_API_KEY })('llama-3.3-70b-versatile'),
+    model: createGroq({ apiKey: config.groqApiKey || process.env.GROQ_API_KEY })('llama-3.3-70b-versatile'),
     system: `You are Chirag's professional AI assistant.
 You represent Chirag accurately, enthusiastically, and always professionally.
 Only use information returned by the provided tools.
