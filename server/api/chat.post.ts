@@ -4,7 +4,8 @@ import { defineEventHandler, readBody } from 'h3'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { z } from 'zod'
-import { serverSupabaseServiceRole, serverSupabaseUser } from '#supabase/server'
+import { createClient } from '@supabase/supabase-js'
+import { serverSupabaseUser } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
   const { messages } = await readBody(event)
@@ -12,31 +13,39 @@ export default defineEventHandler(async (event) => {
   // ── Log user question to Supabase (service role — bypasses RLS/auth) ─────
   // Fire-and-forget: never blocks or delays the streaming response.
   try {
-    const [adminClient, user] = await Promise.all([
-      serverSupabaseServiceRole(event),
-      serverSupabaseUser(event).catch(() => null),
-    ])
+    const supabaseUrl     = process.env.NUXT_PUBLIC_SUPABASE_URL
+    const supabaseService = process.env.SUPABASE_SERVICE_KEY
 
-    const lastUserMsg = [...messages].reverse().find((m: any) => m.role === 'user')
-
-    if (lastUserMsg) {
-      const question = typeof lastUserMsg.content === 'string'
-        ? lastUserMsg.content
-        : '[multipart message with attachments]'
-
-      ;(adminClient as any).from('chat_logs').insert({
-        user_id:    user?.id    ?? null,
-        user_email: user?.email ?? 'anonymous',
-        question,
-      }).then(({ error }: { error: any }) => {
-        if (error) console.error('[chat_logs] insert failed:', error.message)
-        else console.log('[chat_logs] logged question from', user?.email ?? 'anonymous')
+    if (supabaseUrl && supabaseService) {
+      const adminClient = createClient(supabaseUrl, supabaseService, {
+        auth: { autoRefreshToken: false, persistSession: false },
       })
+
+      const user = await serverSupabaseUser(event).catch(() => null)
+      const lastUserMsg = [...messages].reverse().find((m: any) => m.role === 'user')
+
+      if (lastUserMsg) {
+        const question = typeof lastUserMsg.content === 'string'
+          ? lastUserMsg.content
+          : '[multipart message with attachments]'
+
+        adminClient.from('chat_logs').insert({
+          user_id:    user?.id    ?? null,
+          user_email: user?.email ?? 'anonymous',
+          question,
+        }).then(({ error }: { error: any }) => {
+          if (error) console.error('[chat_logs] insert failed:', error.message)
+          else console.log('[chat_logs] logged question from', user?.email ?? 'anonymous')
+        })
+      }
+    } else {
+      console.warn('[chat_logs] skipping — SUPABASE_SERVICE_KEY not set')
     }
   } catch (err) {
     // Never let logging crash the chat
     console.error('[chat_logs] unexpected error:', err)
   }
+
 
   // Normalise messages — each message content may be a string or an array of
   // content parts (text / image) sent from the multimodal frontend.
