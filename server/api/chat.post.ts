@@ -56,44 +56,67 @@ export default defineEventHandler(async (event) => {
     return m
   })
 
-  const result = await streamText({
-    model: createGroq({ apiKey: config.groqApiKey || process.env.GROQ_API_KEY })('llama-3.3-70b-versatile'),
-    system: `You are Chirag's professional AI assistant.
+  try {
+    const result = await streamText({
+      model: createGroq({ apiKey: config.groqApiKey || process.env.GROQ_API_KEY })('llama-3.3-70b-versatile'),
+      system: `You are Chirag's professional AI assistant.
 You represent Chirag accurately, enthusiastically, and always professionally.
 Only use information returned by the provided tools.
 If you don't know something, politely say so and suggest visiting Chirag's LinkedIn or GitHub.
 Use Markdown formatting when helpful (lists, bold, code blocks).
 When the user attaches an image, analyse it in detail and relate it to Chirag's professional context where relevant.
 When the user attaches a PDF document (provided as extracted text), read and summarise it clearly.`,
-    messages: normalisedMessages,
-    tools: {
-      get_resume: tool({
-        description: 'Get Chirag\'s complete resume including skills, education, certifications, and contact information',
-        inputSchema: z.object({}),
-        execute: async () => {
-          const resume = readFileSync(join(process.cwd(), 'data/resume.md'), 'utf-8')
-          return resume
-        },
-      }),
-      get_experience: tool({
-        description: 'Get detailed information about Chirag\'s work experience, including positions at SOLTECH, ANAMII, and Infosys',
-        inputSchema: z.object({}),
-        execute: async () => {
-          const experience = readFileSync(join(process.cwd(), 'data/experience.md'), 'utf-8')
-          return experience
-        },
-      }),
-      get_current_projects: tool({
-        description: 'Get information about Chirag\'s current and past projects including AI Twin, Brain Tumor Recognizer, Box-Ball-Arena, CUDA projects, and more',
-        inputSchema: z.object({}),
-        execute: async () => {
-          const projects = readFileSync(join(process.cwd(), 'data/projects.md'), 'utf-8')
-          return projects
-        },
-      }),
-    },
-  })
+      messages: normalisedMessages,
+      tools: {
+        get_resume: tool({
+          description: 'Get Chirag\'s complete resume including skills, education, certifications, and contact information',
+          inputSchema: z.object({}),
+          execute: async () => {
+            const resume = readFileSync(join(process.cwd(), 'data/resume.md'), 'utf-8')
+            return resume
+          },
+        }),
+        get_experience: tool({
+          description: 'Get detailed information about Chirag\'s work experience, including positions at SOLTECH, ANAMII, and Infosys',
+          inputSchema: z.object({}),
+          execute: async () => {
+            const experience = readFileSync(join(process.cwd(), 'data/experience.md'), 'utf-8')
+            return experience
+          },
+        }),
+        get_current_projects: tool({
+          description: 'Get information about Chirag\'s current and past projects including AI Twin, Brain Tumor Recognizer, Box-Ball-Arena, CUDA projects, and more',
+          inputSchema: z.object({}),
+          execute: async () => {
+            const projects = readFileSync(join(process.cwd(), 'data/projects.md'), 'utf-8')
+            return projects
+          },
+        }),
+      },
+    })
 
-  return result.toTextStreamResponse()
+    return result.toTextStreamResponse()
+
+  } catch (err: any) {
+    // Log for server-side debugging
+    console.error('[chat] streamText error:', err?.message ?? err)
+
+    // Detect rate-limit / quota / credit errors
+    const msg = (err?.message ?? '').toLowerCase()
+    const status: number = err?.status ?? err?.statusCode ?? 500
+    const isRateLimit = status === 429 || status === 402
+      || msg.includes('rate') || msg.includes('quota') || msg.includes('credit') || msg.includes('limit')
+    const isAuth = status === 401
+      || msg.includes('auth') || msg.includes('api key') || msg.includes('invalid key')
+
+    throw createError({
+      statusCode: isRateLimit ? 429 : isAuth ? 401 : 500,
+      statusMessage: isRateLimit
+        ? 'API rate limit reached'
+        : isAuth
+          ? 'API authentication error'
+          : 'AI service error',
+    })
+  }
 })
 

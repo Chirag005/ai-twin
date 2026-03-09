@@ -1,0 +1,166 @@
+CHIRAG NAGENDRA — COMPREHENSIVE PROFESSIONAL PROFILE
+=======================================================
+Updated: February 2025
+Location: Boston, MA
+Email: chiragnagendra001@gmail.com | Phone: +1 (617) 652-4106
+GitHub: github.com/Chirag005 (24+ public repositories)
+LinkedIn: linkedin.com/in/chiragnagendra4575
+Portfolio: chiragnagendra.vercel.app
+Current Role: ML Engineer @ SOLTECH | Lead Full-Stack Developer | ML & NLP Specialist
+=======================================================
+
+
+WHO IS CHIRAG NAGENDRA?
+------------------------
+Chirag Nagendra is a Machine Learning Engineer, NLP Specialist, Full-Stack Developer, and UI/UX Designer with six years of progressive experience designing, deploying, and scaling intelligent systems across healthcare, enterprise software, e-commerce, and smart city domains. Currently based in Boston, Massachusetts, Chirag operates at the intersection of applied AI research and practical software engineering — a rare combination that allows him to move fluidly between writing custom CUDA kernels, training BERT-based NLP models, building full-stack web applications, and designing intuitive user experiences.
+
+Chirag is defined by impact. His systems have boosted product tagging accuracy by 20%, improved customer engagement by 15%, reduced stockouts by 10%, enhanced diagnostic accuracy by 10% in cardiac signal classification, and improved COVID-19 X-ray classification accuracy by 20%. He holds a Google Cloud Certified Generative AI Professional credential, a Stanford University Machine Learning certificate (with full financial aid), and multiple Microsoft Power BI credentials. His GitHub profile spans 24 public repositories, his work has been cited in published academic papers, and he has competed and shipped projects in high-pressure hackathons.
+
+This is the complete, definitive profile of Chirag Nagendra — synthesized from his resume, LinkedIn profile, GitHub, and project portfolio.
+
+
+EDUCATION
+----------
+Master of Science in Information Science — University of Massachusetts, Boston (January 2023 – December 2024)
+Major in Machine Learning. Advanced coursework in Deep Learning, Natural Language Processing, Computer Vision, and data systems. During this program, Chirag completed a robotics capstone (Robomaster, Spring 2023) where his team of four engineers built a fully autonomous robot with computer vision-based obstacle detection, real-time object recognition, path planning, and a data visualization dashboard.
+
+Bachelor of Engineering in Computer Science — Vidya Vardhaka College of Engineering, Mysore, India (2016 – 2020)
+Strong foundations in algorithms, data structures, systems programming, and software engineering. During this degree, Chirag co-authored two peer-reviewed publications on biometric systems and began his first AI research work under the guidance of industry mentors.
+
+
+CERTIFICATIONS
+---------------
+- Google Cloud Certified — Generative AI Leader Professional
+- Stanford University — Machine Learning (with full financial aid)
+- Power BI: Dashboards for Beginners (Microsoft)
+- Power BI Essential Training (Microsoft)
+- Introduction to Programming Using Python
+- Python (Basic) Certificate
+
+The Stanford ML certification — earned with full financial aid — demonstrates both Chirag's academic achievement and the foundational depth of his machine learning knowledge, spanning supervised, unsupervised, and reinforcement learning.
+
+
+PUBLICATIONS
+-------------
+1. "Card-less ATM Transaction Using Biometric And Face Recognition – A Survey"
+2. "Card-Less ATM Transaction using Biometric and Face Recognition – A Review"
+
+These two published papers, co-authored during his undergraduate degree, reflect Chirag's early research interest in biometric security systems and applied computer vision — the same foundation that would later power his healthcare AI work.
+
+
+PROFESSIONAL EXPERIENCE
+------------------------
+
+SOLTECH — Machine Learning Engineer | Boston, MA | December 2024 – Present
+At SOLTECH, Chirag leads applied AI development for an e-commerce and pet industry platform. He works across the full ML lifecycle — from model research and selection through fine-tuning, deployment, and production monitoring.
+
+His deep learning work involved fine-tuning image recognition models for product classification, achieving a 20% improvement in automated product tagging accuracy. He integrated large-scale language models (LLMs) into production customer support workflows, building context-aware assistants that handle pet product queries with improved response accuracy and speed. He implemented RAG (Retrieval-Augmented Generation) pipelines grounded in real product data, reducing hallucination and enhancing response relevance.
+
+On the analytics side, he designed customer behavior prediction algorithms based on purchase history that drove a 15% increase in customer engagement through targeted marketing. He built recommendation systems and churn prediction models to personalize the experience and retain customers. In inventory management, his demand forecasting models reduced stockouts by 10% through accurate demand anticipation.
+
+He also led GraphQL-based API development for ML model integration, achieving a 25% improvement in data retrieval speed. His microservices architecture ensures ML pipelines remain modular and scalable.
+
+Technologies: TensorFlow, PyTorch, LLMs, RAG, GraphQL, REST APIs, Computer Vision, NLP, Predictive Analytics, AWS, Azure.
+
+
+ANAMII AG — Lead Software Engineer | Zürich, Switzerland (Remote) | November 2020 – November 2024
+For four years, Chirag served as Lead Software Engineer at ANAMII, a Swiss enterprise platform focused on risk monitoring and operational optimization. This role required an unusual combination: deep ML engineering, full-stack leadership, cloud infrastructure ownership, and team mentorship across time zones.
+
+He designed and built Python-driven front-end solutions using Vue.js and Nuxt.js for real-time risk monitoring dashboards, enabling risk analysts to make decisions 20% faster through better data visualization. He deployed scalable ML models for predictive maintenance and anomaly detection across industrial systems using TensorFlow and scikit-learn.
+
+On the data engineering side, he implemented Apache Spark and Hive for large-scale dataset processing from customer and inventory databases, reducing processing times by 15%. He built ETL pipelines for real-time data ingestion and optimized analytical data warehousing strategies.
+
+For infrastructure, he automated ML environment deployments using Terraform, containerized workflows with Docker and Kubernetes, and built CI/CD pipelines for reliable model delivery across AWS and Azure. As a technical lead, he conducted code reviews, mentored junior engineers, established engineering standards, and coordinated across product and engineering teams.
+
+Technologies: Python, Vue.js, Nuxt.js, TensorFlow, scikit-learn, Apache Spark, Hive, Terraform, Docker, Kubernetes, AWS, Azure.
+
+
+INFOSYS — Artificial Intelligence Engineer | Mysore, Karnataka, India | September 2019 – November 2020
+Chirag began his professional AI career at Infosys, focused on healthcare applications — one of the highest-stakes and most meaningful domains for machine learning.
+
+He achieved 85% accuracy in mobile-based skin disease detection using CNNs and TensorFlow, deploying the model into an Android application via TensorFlow Lite for real-time inference on device. He collaborated on noise-reduction algorithms using Python and scikit-learn for cardiac signal classification, improving diagnostic accuracy by 10%. During COVID-19, he contributed to ensemble ML models that classified lung X-rays for COVID/Not-COVID screening, improving classification accuracy by 20% — a direct contribution to public health screening during the pandemic.
+
+Technologies: TensorFlow, TensorFlow Lite, Keras, CNNs, Python, Android (Java), Digital Signal Processing, Ensemble Learning, OpenCV.
+
+
+CDAC, NOIDA — Research Intern | February 2019 – July 2019
+Before completing his undergraduate degree, Chirag interned at CDAC (Centre for Development of Advanced Computing) in Noida — one of India's premier research institutions.
+
+Here he worked on a Karnataka State Funded Project applying unsupervised learning to improve data analysis interpretation accuracy by 30%. He reduced analysis time by 30% by removing redundancies from high-dimensional datasets using dimensionality reduction techniques. He delivered TensorFlow-based predictive analytics models for urban planning, increasing forecast accuracy by 12%. He also designed interactive dashboards and web applications using React and Next.js, boosting stakeholder access to insights by 15%.
+
+This early research experience at a government-funded lab established Chirag's habits around rigorous engineering, reproducible experiments, and communicating results to non-technical audiences.
+
+Technologies: Python, TensorFlow, unsupervised learning, React, Next.js, data visualization.
+
+
+TECHNICAL SKILLS
+-----------------
+Programming Languages: Python (expert — including Python 3.x, Pandas, NumPy, SciPy), C++, Java, JavaScript/TypeScript (ES6+), SQL.
+
+Machine Learning & Deep Learning: TensorFlow, PyTorch, Keras, scikit-learn, MXNet, Spark ML. Specialties: CNNs, RNNs, Foundation Models, LLMs, GANs, Diffusion Models, BERT, RoBERTa, transformer-based NLP, RAG, prompt engineering, vector databases (ChromaDB, Supabase).
+
+Cloud & DevOps: AWS (EC2, S3, RDS), Azure, Google Cloud Platform. Docker, Kubernetes, Terraform, Jenkins, Ansible, Git.
+
+Web Development: Vue.js, Nuxt.js, React, Next.js, Angular, Three.js (3D graphics), Node.js, Nitro, Express, GraphQL, REST APIs, TailwindCSS, CSS3.
+
+Databases: MySQL, PostgreSQL, MS SQL Server, SQLite, ChromaDB, MongoDB, Supabase.
+
+Other: System Architecture, Agile/Scrum, Critical Thinking, UI/UX design, data visualization (Power BI, D3.js).
+
+
+PROJECTS & HACKATHONS
+----------------------
+
+AI Twin — Intelligent Portfolio Assistant (Active, 2025)
+Chirag's most personal and technically sophisticated project. An AI-powered interactive portfolio where visitors have natural conversations about his professional background. Built on Nuxt.js 4 with Groq's LLaMA 3.3 70B model, streaming responses, markdown rendering, PDF/image attachment support, Supabase chat logging, and Vercel deployment. Uses Nuxt runtimeConfig for secure API key management.
+
+Robomaster — Autonomous Driving Robot (Capstone, Spring 2023)
+A four-person UMass Boston capstone project building a fully autonomous robot that navigated obstacle courses using computer vision and ML. Implemented real-time object detection, obstacle avoidance, autonomous path planning, and a data visualization dashboard showing driving routes and completion times.
+
+Brain Tumor Recognizer App — Microsoft Azure Hackathon (Winner)
+Real-time AI model for 2D brain MRI classification using TensorFlow Lite and Azure Custom Vision Service. Achieved 20% efficiency boost through Azure Machine Learning for automated model training. Deployed as an Android app for mobile healthcare via smartphone camera.
+
+Skin Disease Detector App — Google DSC Hackathon
+Built during a 24-hour hackathon. Used TensorFlow Lite for real-time skin disease classification. Preprocessed and augmented Harvard skin disease dataset using OpenCV, achieving 82% accuracy. Integrated into an Android app for disease classification and finding nearby dermatologists.
+
+Sentiment Engine — Real-time NLP (Production)
+Enterprise-grade sentiment analysis platform for processing customer feedback at scale using BERT, RoBERTa, and Transformers. Built with Apache Spark, FastAPI, Vue.js, and MongoDB. Includes trend analysis and anomaly detection.
+
+CUDA Kernel Optimization Project
+Custom CUDA kernels for ReLU activation and ML operations, with memory coalescing, kernel fusion, and performance profiling via NVIDIA Nsight. Demonstrates low-level GPU programming expertise.
+
+RALA — Autonomous Greenhouse System
+An ongoing vision project ("Something bigger than me!") integrating IoT sensors, MQTT, FastAPI, InfluxDB, and Nuxt.js for autonomous greenhouse management.
+
+BSWDS — Bangalore Smart Water Distribution System
+TypeScript-based enterprise dashboard for smart city water infrastructure — real-time monitoring, anomaly detection, and resource optimization.
+
+Box Ball Arena — 3D Physics Game
+Browser-based 3D physics simulation built with Three.js and Cannon.js running at 60 FPS with realistic lighting, collision detection, and particle effects.
+
+StoryLens-AI — Personalized Story Generator
+GenAI platform for dynamic personalized narrative creation using LLMs with customizable parameters.
+
+Flow State — Wellness & Productivity Platform
+User-centered habit tracking app with productivity analytics, accessibility compliance, and responsive design.
+
+
+PROFESSIONAL PHILOSOPHY
+------------------------
+On his LinkedIn, Chirag describes himself as "passionate about leveraging AI to solve complex, real-world problems" and "committed to continuous learning, collaboration, and delivering impactful AI-driven solutions." He is open to opportunities that drive technological advancement and meaningful change.
+
+His engineering philosophy: build things that ship, scale, and serve real users. Not just impressive demos — production systems with measurable outcomes. He brings this same standard to every layer: from GPU kernel optimization to accessible front-end design.
+
+
+CONTACT & LINKS
+----------------
+Email: chiragnagendra001@gmail.com
+Phone: +1 (617) 652-4106
+Portfolio: https://chiragnagendra.vercel.app/
+LinkedIn: https://www.linkedin.com/in/chiragnagendra4575/
+GitHub: https://github.com/Chirag005
+
+=======================================================
+END OF PROFILE — ~2,100 words
+Sources: resume PDF, LinkedIn profile PDF, projects.md, experience.md, github.com/Chirag005
+=======================================================

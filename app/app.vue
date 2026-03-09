@@ -10,10 +10,6 @@ import { Analytics } from '@vercel/analytics/nuxt';
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* Custom Fonts */
 .font-display {
   font-family: 'Outfit', sans-serif;

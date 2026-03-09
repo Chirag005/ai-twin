@@ -107,23 +107,89 @@ const handleSend = async () => {
   isLoading.value = true;
   await scrollToBottom();
 
-  try {
-    const apiMessages = messages.value.slice(0, -1).map(m => ({
-      role: m.sender === 'user' ? 'user' : 'assistant',
-      content: m.text,
-    }));
-    apiMessages.push({ role: 'user', content: userContent });
+  // Build message history for API
+  const apiMessages = messages.value.slice(0, -1).map(m => ({
+    role: m.sender === 'user' ? 'user' : 'assistant',
+    content: m.text,
+  }));
+  apiMessages.push({ role: 'user', content: userContent });
 
+  // Add a live AI placeholder we'll stream tokens into
+  const aiMsgId = Date.now() + 1;
+  messages.value.push({ id: aiMsgId, text: '', sender: 'ai' });
+
+  try {
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: apiMessages }),
     });
-    if (!response.ok) throw new Error('Failed');
-    const aiResponse = await response.text();
-    messages.value.push({ id: Date.now() + 1, text: aiResponse, sender: 'ai' });
+
+    // ── HTTP error → friendly message ─────────────────────────────────────
+    if (!response.ok) {
+      const idx = messages.value.findIndex(m => m.id === aiMsgId);
+      if (idx !== -1) {
+        if (response.status === 429 || response.status === 402) {
+          messages.value[idx].text =
+            "⚠️ Looks like the AI service has hit its limit for now — sorry about that! " +
+            "Please try again in a moment, or reach out to Chirag directly at **chiragnagendra001@gmail.com** 🙂";
+        } else if (response.status >= 500) {
+          messages.value[idx].text =
+            "⚠️ Something went wrong on my end. Please try again in a few seconds.";
+        } else {
+          messages.value[idx].text =
+            "⚠️ An unexpected error occurred. Please try again.";
+        }
+      }
+      return;
+    }
+
+    // ── Stream reading: parse AI SDK data-stream protocol ─────────────────
+    // Each chunk is a line like:  0:"token text"
+    // We extract those tokens and append them live to the message.
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let accumulated = '';
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      // Keep the last (potentially incomplete) line in the buffer
+      buffer = lines.pop() ?? '';
+
+      for (const line of lines) {
+        if (line.startsWith('0:')) {
+          try {
+            const token = JSON.parse(line.slice(2)); // parse the JSON string token
+            accumulated += token;
+            const idx = messages.value.findIndex(m => m.id === aiMsgId);
+            if (idx !== -1) messages.value[idx].text = accumulated;
+            await scrollToBottom();
+          } catch { /* skip malformed lines */ }
+        }
+      }
+    }
+
+    // ── Nothing came through → fallback ──────────────────────────────────
+    if (!accumulated.trim()) {
+      const idx = messages.value.findIndex(m => m.id === aiMsgId);
+      if (idx !== -1) {
+        messages.value[idx].text =
+          "⚠️ I didn't receive a response — please try again!";
+      }
+    }
+
   } catch {
-    messages.value.push({ id: Date.now() + 1, text: 'Sorry, I encountered an error. Please try again.', sender: 'ai' });
+    // Network or other unexpected failure
+    const idx = messages.value.findIndex(m => m.id === aiMsgId);
+    if (idx !== -1) {
+      messages.value[idx].text =
+        "⚠️ Couldn't reach the server. Please check your connection and try again.";
+    }
   } finally {
     isLoading.value = false;
     await scrollToBottom();
@@ -131,12 +197,12 @@ const handleSend = async () => {
 };
 
 // ── Suggestion cards ──────────────────────────────────────────────────────────
-// Colors are CSS custom properties set via :style — keeps the template clean
-// and avoids dynamic Tailwind class strings.
+// Each card has a `cannedResponse` — clicking it instantly injects the Q&A
+// into the chat without consuming any API credits.
 const suggestions = [
   {
     title: 'Tech Stack Experience',
-    desc: 'What is your experience with Nuxt 3?',
+    desc: 'What technologies does Chirag work with?',
     icon: Code2,
     vars: {
       '--accent':       'rgb(96, 165, 250)',
@@ -145,6 +211,7 @@ const suggestions = [
       '--border-hover': 'rgba(59, 130, 246, 0.3)',
       '--text-hover':   'rgb(147, 197, 253)',
     },
+    cannedResponse: `Chirag's tech stack spans the full engineering spectrum:\n\n**Languages:** Python (expert), TypeScript / JavaScript (ES6+), C++, Java, SQL\n\n**AI & Machine Learning:** TensorFlow, PyTorch, Keras, scikit-learn, LLMs, RAG pipelines, BERT, RoBERTa, transformers, vector databases (ChromaDB, Supabase pgvector)\n\n**Web Development:** Nuxt.js 4, Vue.js 3, React, Next.js, Node.js, TailwindCSS, GraphQL, REST APIs, Three.js\n\n**Cloud & DevOps:** AWS (EC2, S3, RDS), Azure, Google Cloud, Docker, Kubernetes, Terraform, Jenkins, Ansible\n\n**Databases:** PostgreSQL, MySQL, MongoDB, SQLite, Supabase, ChromaDB\n\n**Other:** CUDA / GPU programming, Apache Spark, Power BI, D3.js, Agile / Scrum`,
   },
   {
     title: 'Recent Projects',
@@ -157,6 +224,7 @@ const suggestions = [
       '--border-hover': 'rgba(217, 70, 239, 0.3)',
       '--text-hover':   'rgb(240, 171, 252)',
     },
+    cannedResponse: `Here are some of Chirag's most exciting projects:\n\n**🤖 AI Twin** *(Active — you're using it right now!)*\nAn AI-powered interactive portfolio using Groq's LLaMA 3.3 70B, Nuxt.js 4, Supabase auth & chat logging, real-time streaming, and multimodal (image/PDF) support.\n\n**🌱 RALA — Autonomous Greenhouse System** *(Active)*\nAn IoT-driven autonomous greenhouse integrating MQTT sensors, FastAPI, InfluxDB, and a Nuxt.js dashboard for real-time plant environment management.\n\n**🧠 Brain Tumor Recognizer** *(Microsoft Azure Hackathon Winner)*\nAndroid app for 2D brain MRI classification using TensorFlow Lite + Azure Custom Vision. Achieved 20% efficiency boost through automated model training.\n\n**💬 Sentiment Engine** *(Production)*\nEnterprise real-time sentiment analysis platform using BERT, RoBERTa, Apache Spark, FastAPI, and Vue.js — processing customer feedback at scale.\n\n**🎮 Box Ball Arena**\nBrowser-based 3D physics game built with Three.js + Cannon.js running at a smooth 60 FPS with realistic lighting and collision detection.\n\n**⚡ CUDA Kernel Optimization**\nCustom PyTorch CUDA kernels for ReLU activation with memory coalescing, kernel fusion, and NVIDIA Nsight profiling — demonstrating low-level GPU expertise.\n\nSee all 24+ projects on [github.com/Chirag005](https://github.com/Chirag005)`,
   },
   {
     title: 'Education',
@@ -169,10 +237,11 @@ const suggestions = [
       '--border-hover': 'rgba(20, 184, 166, 0.3)',
       '--text-hover':   'rgb(94, 234, 212)',
     },
+    cannedResponse: `Chirag holds two degrees and several industry certifications:\n\n**🎓 Master of Science — Information Science**\nUniversity of Massachusetts, Boston (Jan 2023 – Dec 2024)\nSpecialisation in Machine Learning, with advanced coursework in Deep Learning, NLP, Computer Vision, and data systems. Capstone: Robomaster autonomous robot with real-time obstacle detection and path planning.\n\n**🎓 Bachelor of Engineering — Computer Science**\nVidya Vardhaka College of Engineering, Mysore, India (2016 – 2020)\nStrong foundations in algorithms, data structures, systems programming, and software engineering. Co-authored two peer-reviewed publications on biometric security systems.\n\n**📜 Certifications:**\n- **Google Cloud Certified** — Generative AI Leader Professional\n- **Stanford University** — Machine Learning (awarded full financial aid)\n- **Microsoft** — Power BI Dashboards & Essential Training\n- Introduction to Programming Using Python\n- Python (Basic) Certificate`,
   },
   {
     title: 'Contact Info',
-    desc: 'How can I reach out to you?',
+    desc: 'How can I reach out to Chirag?',
     icon: MessageCircle,
     vars: {
       '--accent':       'rgb(251, 191, 36)',
@@ -181,8 +250,34 @@ const suggestions = [
       '--border-hover': 'rgba(245, 158, 11, 0.3)',
       '--text-hover':   'rgb(252, 211, 77)',
     },
+    cannedResponse: `You can reach Chirag through any of the following:\n\n**📧 Email:** chiragnagendra001@gmail.com\n**📱 Phone:** +1 (617) 652-4106\n**🌐 Portfolio:** [chiragnagendra.vercel.app](https://chiragnagendra.vercel.app)\n**💼 LinkedIn:** [linkedin.com/in/chiragnagendra4575](https://www.linkedin.com/in/chiragnagendra4575/)\n**🐙 GitHub:** [github.com/Chirag005](https://github.com/Chirag005)\n\nChirag is currently based in **Boston, MA** and is open to opportunities in ML Engineering, Full-Stack Development, and AI systems. He's always happy to connect — don't hesitate to reach out! 🙂`,
   },
 ];
+
+// ── Suggestion click → instant canned response (no API call) ─────────────────
+const handleSuggestionClick = async (s) => {
+  // 1. Push the user question
+  messages.value.push({
+    id: Date.now(),
+    text: s.desc,
+    sender: 'user',
+    attachment: null,
+  });
+  await scrollToBottom();
+
+  // 2. Simulate a brief "typing" delay for natural feel
+  isLoading.value = true;
+  await new Promise(r => setTimeout(r, 600));
+  isLoading.value = false;
+
+  // 3. Push the pre-written AI response
+  messages.value.push({
+    id: Date.now() + 1,
+    text: s.cannedResponse,
+    sender: 'ai',
+  });
+  await scrollToBottom();
+};
 </script>
 
 <template>
@@ -221,7 +316,7 @@ const suggestions = [
             <button
               v-for="s in suggestions"
               :key="s.title"
-              @click="fillInput(s.desc)"
+              @click="handleSuggestionClick(s)"
               class="suggestion-card"
               :style="s.vars"
             >
